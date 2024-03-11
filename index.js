@@ -31,6 +31,14 @@ initializeApp({
 
 app.post("/send", async function (req, res) {
   const { type, receiverId, senderId, message, fcmToken } = req.body;
+  const { token } = req.query;
+
+  if (atob(token) !== process.env.SECRET_TOKEN) {
+    res.status(400);
+    res.send({ message: "Invalid Token" });
+    console.log("Error sending message: Invalid Token");
+    return;
+  }
 
   const db = getFirestore();
 
